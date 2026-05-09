@@ -4,6 +4,7 @@ import Footer from './components/Footer'
 import LandingPage from './pages/LandingPage'
 import PricingPage from './pages/PricingPage'
 import SelectPage from './pages/SelectPage'
+import ChatPage from './pages/ChatPage'
 import PlaceholderPage from './pages/PlaceholderPage'
 import styles from './App.module.css'
 
@@ -13,6 +14,16 @@ function Layout({ children }) {
       <Navbar />
       <main className={styles.main}>{children}</main>
       <Footer />
+    </div>
+  )
+}
+
+// チャット画面は Navbar のみ（フッターなし）でフル高さを活用
+function ChatLayout({ children }) {
+  return (
+    <div className={styles.layout}>
+      <Navbar />
+      <main className={styles.main}>{children}</main>
     </div>
   )
 }
@@ -43,6 +54,14 @@ export default function App() {
             <Layout>
               <SelectPage />
             </Layout>
+          }
+        />
+        <Route
+          path="/chat/:itemId"
+          element={
+            <ChatLayout>
+              <ChatPage />
+            </ChatLayout>
           }
         />
         <Route
