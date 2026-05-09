@@ -1,69 +1,65 @@
-@import "tailwindcss";
+:root {
+  --color-earth-50: #faf6f1;
+  --color-earth-100: #f2e9dc;
+  --color-earth-200: #e4d0b8;
+  --color-earth-300: #d4b28e;
+  --color-earth-400: #c49068;
+  --color-earth-500: #b87348;
+  --color-earth-600: #9a5d38;
+  --color-earth-700: #7d4a2d;
+  --color-earth-800: #5e3720;
+  --color-earth-900: #3d2212;
+  --color-earth-950: #1e1009;
 
-@layer base {
-  :root {
-    --color-earth-50: #faf6f1;
-    --color-earth-100: #f2e9dc;
-    --color-earth-200: #e4d0b8;
-    --color-earth-300: #d4b28e;
-    --color-earth-400: #c49068;
-    --color-earth-500: #b87348;
-    --color-earth-600: #9a5d38;
-    --color-earth-700: #7d4a2d;
-    --color-earth-800: #5e3720;
-    --color-earth-900: #3d2212;
-    --color-earth-950: #1e1009;
+  --shadow-sm: 0 1px 3px rgba(61, 34, 18, 0.08), 0 1px 2px rgba(61, 34, 18, 0.04);
+  --shadow-md: 0 4px 12px rgba(61, 34, 18, 0.1), 0 2px 4px rgba(61, 34, 18, 0.06);
+  --shadow-lg: 0 12px 32px rgba(61, 34, 18, 0.12), 0 4px 8px rgba(61, 34, 18, 0.06);
+  --shadow-xl: 0 24px 64px rgba(61, 34, 18, 0.14), 0 8px 16px rgba(61, 34, 18, 0.08);
 
-    --shadow-sm: 0 1px 3px rgba(61, 34, 18, 0.08), 0 1px 2px rgba(61, 34, 18, 0.04);
-    --shadow-md: 0 4px 12px rgba(61, 34, 18, 0.1), 0 2px 4px rgba(61, 34, 18, 0.06);
-    --shadow-lg: 0 12px 32px rgba(61, 34, 18, 0.12), 0 4px 8px rgba(61, 34, 18, 0.06);
-    --shadow-xl: 0 24px 64px rgba(61, 34, 18, 0.14), 0 8px 16px rgba(61, 34, 18, 0.08);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+}
 
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
-  }
+html {
+  scroll-behavior: smooth;
+}
 
-  html {
-    scroll-behavior: smooth;
-  }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
+body {
+  margin: 0;
+  background-color: var(--color-earth-50);
+  color: var(--color-earth-900);
+  font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  body {
-    margin: 0;
-    background-color: var(--color-earth-50);
-    color: var(--color-earth-900);
-    font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', system-ui, sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  line-height: 1.3;
+}
 
-  h1, h2, h3, h4, h5, h6 {
-    margin: 0;
-    line-height: 1.3;
-  }
+p {
+  margin: 0;
+}
 
-  p {
-    margin: 0;
-  }
+a {
+  color: inherit;
+}
 
-  a {
-    color: inherit;
-  }
+button {
+  cursor: pointer;
+}
 
-  button {
-    cursor: pointer;
-  }
-
-  img, svg {
-    display: block;
-  }
+img, svg {
+  display: block;
 }

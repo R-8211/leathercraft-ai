@@ -5,12 +5,13 @@ import LandingPage from './pages/LandingPage'
 import PricingPage from './pages/PricingPage'
 import SelectPage from './pages/SelectPage'
 import PlaceholderPage from './pages/PlaceholderPage'
+import styles from './App.module.css'
 
 function Layout({ children }) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className={styles.layout}>
       <Navbar />
-      <main className="flex-1">{children}</main>
+      <main className={styles.main}>{children}</main>
       <Footer />
     </div>
   )
