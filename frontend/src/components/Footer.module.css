@@ -1,0 +1,102 @@
+.footer {
+  background-color: var(--color-earth-900);
+  color: var(--color-earth-300);
+}
+
+.inner {
+  max-width: 1152px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.brand {}
+
+.brandName {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.75rem;
+}
+
+.brandDesc {
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--color-earth-300);
+  max-width: 280px;
+}
+
+.colTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-earth-200);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+}
+
+.linkList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.footerLink {
+  font-size: 0.875rem;
+  color: var(--color-earth-300);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footerLink:hover {
+  color: white;
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--color-earth-800);
+  border: none;
+  margin-bottom: 1.5rem;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+  .bottom {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.copyright {
+  font-size: 0.75rem;
+  color: var(--color-earth-600);
+}
+
+.disclaimer {
+  font-size: 0.75rem;
+  color: var(--color-earth-600);
+}

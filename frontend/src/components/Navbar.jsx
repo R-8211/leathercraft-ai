@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import styles from './Navbar.module.css'
 
 const NAV_ITEMS = [
   { label: 'トップ', to: '/' },
@@ -15,9 +16,7 @@ export default function Navbar() {
       e.preventDefault()
       const id = to.replace('/#', '')
       const el = document.getElementById(id)
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' })
-      }
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
       setMenuOpen(false)
     } else {
       setMenuOpen(false)
@@ -25,29 +24,18 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-[#faf6f1]/95 backdrop-blur border-b border-[#e4d0b8]">
-      <nav className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
+    <header className={styles.header}>
+      <nav className={styles.nav}>
+        <Link to="/" className={styles.logo}>
           <LeatherIcon />
-          <span
-            className="text-xl font-bold text-[#5e3720] leading-tight"
-            style={{ fontFamily: "'Noto Serif JP', serif" }}
-          >
-            LeatherCraft AI
-          </span>
+          <span className={styles.logoText}>LeatherCraft AI</span>
         </Link>
 
-        {/* Desktop Nav */}
-        <ul className="hidden md:flex items-center gap-6">
+        <ul className={styles.desktopNav}>
           {NAV_ITEMS.map(({ label, to }) => (
             <li key={to}>
               {to.startsWith('/#') ? (
-                <a
-                  href={to}
-                  onClick={(e) => handleHashLink(e, to)}
-                  className="text-sm text-[#7d4a2d] hover:text-[#5e3720] font-medium transition-colors"
-                >
+                <a href={to} onClick={(e) => handleHashLink(e, to)} className={styles.navLink}>
                   {label}
                 </a>
               ) : (
@@ -55,11 +43,7 @@ export default function Navbar() {
                   to={to}
                   end
                   className={({ isActive }) =>
-                    `text-sm font-medium transition-colors ${
-                      isActive
-                        ? 'text-[#5e3720] border-b-2 border-[#b87348]'
-                        : 'text-[#7d4a2d] hover:text-[#5e3720]'
-                    }`
+                    isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink
                   }
                 >
                   {label}
@@ -69,54 +53,37 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Desktop Login */}
-        <div className="hidden md:flex items-center gap-3">
-          <Link
-            to="/login"
-            className="text-sm font-medium text-[#7d4a2d] hover:text-[#5e3720] transition-colors"
-          >
-            ログイン
-          </Link>
-          <Link
-            to="/select"
-            className="px-4 py-2 bg-[#b87348] hover:bg-[#9a5d38] text-white text-sm font-medium rounded-lg transition-colors"
-          >
-            無料で始める
-          </Link>
+        <div className={styles.desktopActions}>
+          <Link to="/login" className={styles.loginLink}>ログイン</Link>
+          <Link to="/select" className={styles.ctaBtn}>無料で始める</Link>
         </div>
 
-        {/* Mobile Hamburger */}
         <button
           aria-label={menuOpen ? 'メニューを閉じる' : 'メニューを開く'}
           aria-expanded={menuOpen}
-          className="md:hidden p-2 rounded text-[#7d4a2d]"
+          className={styles.menuBtn}
           onClick={() => setMenuOpen((prev) => !prev)}
         >
           {menuOpen ? (
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="15" y1="5" x2="5" y2="15" />
+              <line x1="5" y1="5" x2="15" y2="15" />
             </svg>
           ) : (
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="3" y1="8" x2="21" y2="8" />
-              <line x1="3" y1="16" x2="21" y2="16" />
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="3" y1="7" x2="17" y2="7" />
+              <line x1="3" y1="13" x2="17" y2="13" />
             </svg>
           )}
         </button>
       </nav>
 
-      {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-[#faf6f1] border-t border-[#e4d0b8] px-4 py-4 flex flex-col gap-4">
+        <div className={styles.mobileMenu}>
           {NAV_ITEMS.map(({ label, to }) => (
             <div key={to}>
               {to.startsWith('/#') ? (
-                <a
-                  href={to}
-                  onClick={(e) => handleHashLink(e, to)}
-                  className="block text-base text-[#7d4a2d] hover:text-[#5e3720] font-medium py-1"
-                >
+                <a href={to} onClick={(e) => handleHashLink(e, to)} className={styles.mobileNavLink}>
                   {label}
                 </a>
               ) : (
@@ -124,26 +91,18 @@ export default function Navbar() {
                   to={to}
                   end
                   onClick={() => setMenuOpen(false)}
-                  className="block text-base text-[#7d4a2d] hover:text-[#5e3720] font-medium py-1"
+                  className={styles.mobileNavLink}
                 >
                   {label}
                 </NavLink>
               )}
             </div>
           ))}
-          <hr className="border-[#e4d0b8]" />
-          <Link
-            to="/login"
-            onClick={() => setMenuOpen(false)}
-            className="block text-base text-[#7d4a2d] font-medium py-1"
-          >
+          <hr className={styles.mobileDivider} />
+          <Link to="/login" onClick={() => setMenuOpen(false)} className={styles.mobileNavLink}>
             ログイン
           </Link>
-          <Link
-            to="/select"
-            onClick={() => setMenuOpen(false)}
-            className="block text-center px-4 py-2 bg-[#b87348] text-white text-sm font-medium rounded-lg"
-          >
+          <Link to="/select" onClick={() => setMenuOpen(false)} className={styles.mobileCtaBtn}>
             無料で始める
           </Link>
         </div>
@@ -154,16 +113,17 @@ export default function Navbar() {
 
 function LeatherIcon() {
   return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <rect width="32" height="32" rx="8" fill="#b87348" />
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+      <rect width="30" height="30" rx="8" fill="var(--color-earth-500)" />
       <path
-        d="M8 22 L16 10 L24 22 M11 18 L21 18"
+        d="M8 21 L15 10 L22 21"
         stroke="white"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill="none"
       />
-      <circle cx="16" cy="10" r="2" fill="white" />
+      <line x1="10.5" y1="17" x2="19.5" y2="17" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   )
 }
