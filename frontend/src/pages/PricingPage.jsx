@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import styles from './PricingPage.module.css'
 
 const PLANS = [
   {
@@ -7,9 +8,8 @@ const PLANS = [
     nameJa: '無料プラン',
     price: 0,
     unit: '永久無料',
-    color: 'border-[#e4d0b8]',
-    headerBg: 'bg-[#faf6f1]',
-    ctaStyle: 'border-2 border-[#b87348] text-[#b87348] hover:bg-[#b87348] hover:text-white',
+    headerClass: '',
+    ctaClass: styles.ctaOutline,
     ctaLabel: '無料で始める',
     description: 'はじめてのレザークラフトに挑戦したい方向け',
     highlight: false,
@@ -31,9 +31,8 @@ const PLANS = [
     nameJa: 'ホビープラン',
     price: 480,
     unit: '月額',
-    color: 'border-[#b87348]',
-    headerBg: 'bg-[#faf6f1]',
-    ctaStyle: 'bg-[#b87348] hover:bg-[#9a5d38] text-white',
+    headerClass: '',
+    ctaClass: styles.ctaBrown,
     ctaLabel: 'Hobbyプランを始める',
     description: '定期的にレザークラフトを楽しむホビーユーザー向け',
     highlight: false,
@@ -55,9 +54,8 @@ const PLANS = [
     nameJa: 'クリエイタープラン',
     price: 1480,
     unit: '月額',
-    color: 'border-[#7d4a2d]',
-    headerBg: 'bg-gradient-to-br from-[#f2e9dc] to-[#e4d0b8]',
-    ctaStyle: 'bg-[#7d4a2d] hover:bg-[#5e3720] text-white',
+    headerClass: styles.planHeaderCream,
+    ctaClass: styles.ctaDark,
     ctaLabel: 'Creatorプランを始める',
     description: '本格的に制作・販売を行うクリエイター向け',
     highlight: true,
@@ -80,12 +78,12 @@ const PLANS = [
     nameJa: 'プロプラン',
     price: 4980,
     unit: '月額',
-    color: 'border-[#3d2212]',
-    headerBg: 'bg-[#3d2212]',
-    ctaStyle: 'bg-[#3d2212] hover:bg-black text-white',
+    headerClass: styles.planHeaderDark,
+    ctaClass: styles.ctaBlack,
     ctaLabel: 'Proプランを始める',
     description: 'ビジネス・大量生成・API連携が必要なプロ向け',
     highlight: false,
+    isDark: true,
     features: [
       { label: '無制限で型紙生成', available: true },
       { label: '対応アイテム全種類', available: true },
@@ -101,115 +99,99 @@ const PLANS = [
 ]
 
 const COMPARISON_ROWS = [
-  { label: '月の生成回数', free: '5回', hobby: '50回', creator: '200回', pro: '無制限' },
-  { label: 'PDFダウンロード', free: '透かし入り', hobby: '透かしなし', creator: '透かしなし', pro: '透かしなし' },
-  { label: '型紙保存件数', free: '5件', hobby: '30件', creator: '100件', pro: '無制限' },
-  { label: '商用利用', free: '×', hobby: '×', creator: '○', pro: '○' },
-  { label: 'チャット履歴保存', free: '×', hobby: '○', creator: '○', pro: '○' },
-  { label: '優先サポート', free: '×', hobby: '×', creator: '○', pro: '○' },
-  { label: 'API連携', free: '×', hobby: '×', creator: 'β', pro: '○' },
+  { label: '月の生成回数', values: ['5回', '50回', '200回', '無制限'] },
+  { label: 'PDFダウンロード', values: ['透かし入り', '透かしなし', '透かしなし', '透かしなし'] },
+  { label: '型紙保存件数', values: ['5件', '30件', '100件', '無制限'] },
+  { label: '商用利用', values: ['×', '×', '○', '○'] },
+  { label: 'チャット履歴保存', values: ['×', '○', '○', '○'] },
+  { label: '優先サポート', values: ['×', '×', '○', '○'] },
+  { label: 'API連携', values: ['×', '×', 'β', '○'] },
+]
+
+const FAQ_ITEMS = [
+  {
+    q: '無料プランからアップグレードできますか？',
+    a: 'はい、いつでもアップグレードできます。アップグレード後は即時に新しいプランの機能をご利用いただけます。',
+  },
+  {
+    q: 'いつでも解約できますか？',
+    a: 'はい、いつでも解約できます。解約後も当月末まで有料機能をご利用いただけます。',
+  },
+  {
+    q: '生成した型紙を商用利用できますか？',
+    a: 'Creatorプラン以上では商用利用が可能です。詳しくは利用規約をご確認ください。',
+  },
+  {
+    q: 'PDFの透かしとは何ですか？',
+    a: '無料プランでダウンロードしたPDFには「LeatherCraft AI Free」の透かしが薄く入ります。Hobbyプラン以上では透かしのないクリーンなPDFをダウンロードできます。',
+  },
 ]
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-[#faf6f1]">
-      {/* Header */}
-      <section className="py-16 px-4 bg-gradient-to-br from-[#f2e9dc] to-[#faf6f1] text-center border-b border-[#e4d0b8]">
-        <h1
-          className="text-4xl sm:text-5xl font-bold text-[#3d2212] mb-4"
-          style={{ fontFamily: "'Noto Serif JP', serif" }}
-        >
-          料金プラン
-        </h1>
-        <p className="text-[#7d4a2d] text-lg max-w-2xl mx-auto">
+    <div className={styles.page}>
+      <section className={styles.pageHeader}>
+        <h1 className={styles.pageTitle}>料金プラン</h1>
+        <p className={styles.pageSubtitle}>
           まずは無料から始められます。使い方に合わせてプランをお選びください。
         </p>
       </section>
 
       {/* Plan Cards */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className={`${styles.section} ${styles.sectionCream}`}>
+        <div className={styles.inner}>
+          <div className={styles.plansGrid}>
             {PLANS.map((plan) => (
               <div
                 key={plan.id}
-                className={`relative rounded-2xl border-2 overflow-hidden bg-white shadow-sm ${plan.color} ${
-                  plan.highlight ? 'shadow-lg scale-105' : ''
-                }`}
+                className={`${styles.planCard} ${plan.highlight ? styles.planCardHighlight : ''}`}
               >
-                {plan.badge && (
-                  <div className="absolute top-3 right-3 px-2 py-0.5 bg-[#b87348] text-white text-xs font-bold rounded-full">
-                    {plan.badge}
-                  </div>
-                )}
+                {plan.badge && <span className={styles.planBadge}>{plan.badge}</span>}
 
-                {/* Plan Header */}
-                <div className={`${plan.headerBg} px-6 py-6`}>
-                  <div
-                    className={`text-lg font-bold mb-1 ${
-                      plan.id === 'pro' ? 'text-white' : 'text-[#3d2212]'
-                    }`}
-                    style={{ fontFamily: "'Noto Serif JP', serif" }}
-                  >
+                <div className={`${styles.planHeader} ${plan.headerClass || ''}`}>
+                  <p className={`${styles.planName} ${plan.isDark ? styles.planNameLight : ''}`}>
                     {plan.name}
-                  </div>
-                  <div className={`text-xs mb-4 ${plan.id === 'pro' ? 'text-[#d4b28e]' : 'text-[#9a5d38]'}`}>
+                  </p>
+                  <p className={`${styles.planNameJa} ${plan.isDark ? styles.planNameJaLight : ''}`}>
                     {plan.nameJa}
-                  </div>
-                  <div className={`flex items-end gap-1 ${plan.id === 'pro' ? 'text-white' : 'text-[#3d2212]'}`}>
+                  </p>
+                  <div className={styles.planPriceRow}>
                     {plan.price === 0 ? (
-                      <span className="text-3xl font-bold">無料</span>
+                      <span className={`${styles.planPrice} ${plan.isDark ? styles.planPriceLight : ''}`}>
+                        無料
+                      </span>
                     ) : (
                       <>
-                        <span className="text-3xl font-bold">¥{plan.price.toLocaleString()}</span>
-                        <span className="text-sm mb-1 text-[#9a5d38]">/{plan.unit}</span>
+                        <span className={`${styles.planPrice} ${plan.isDark ? styles.planPriceLight : ''}`}>
+                          ¥{plan.price.toLocaleString()}
+                        </span>
+                        <span className={`${styles.planPriceUnit} ${plan.isDark ? styles.planPriceUnitLight : ''}`}>
+                          /{plan.unit}
+                        </span>
                       </>
                     )}
                   </div>
-                  <p className={`text-xs mt-2 leading-relaxed ${plan.id === 'pro' ? 'text-[#d4b28e]' : 'text-[#7d4a2d]'}`}>
+                  <p className={`${styles.planDesc} ${plan.isDark ? styles.planDescLight : ''}`}>
                     {plan.description}
                   </p>
                 </div>
 
-                {/* Features */}
-                <div className="px-6 py-6">
-                  <ul className="space-y-3 mb-6">
+                <div className={styles.planFeatures}>
+                  <ul className={styles.featureList}>
                     {plan.features.map(({ label, available }) => (
-                      <li key={label} className="flex items-start gap-2 text-sm">
+                      <li key={label} className={styles.featureItem}>
                         {available ? (
-                          <svg
-                            className="w-4 h-4 text-green-600 mt-0.5 shrink-0"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
+                          <CheckIcon className={`${styles.featureIcon} ${styles.iconCheck}`} />
                         ) : (
-                          <svg
-                            className="w-4 h-4 text-[#c4a882] mt-0.5 shrink-0"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
+                          <XIcon className={`${styles.featureIcon} ${styles.iconX}`} />
                         )}
-                        <span className={available ? 'text-[#3d2212]' : 'text-[#c4a882]'}>{label}</span>
+                        <span className={available ? styles.featureAvailable : styles.featureUnavailable}>
+                          {label}
+                        </span>
                       </li>
                     ))}
                   </ul>
-
-                  <Link
-                    to="/select"
-                    className={`block w-full text-center px-4 py-3 rounded-xl font-semibold text-sm transition-all ${plan.ctaStyle}`}
-                  >
+                  <Link to="/select" className={`${styles.planCta} ${plan.ctaClass}`}>
                     {plan.ctaLabel}
                   </Link>
                 </div>
@@ -220,47 +202,29 @@ export default function PricingPage() {
       </section>
 
       {/* Comparison Table */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <h2
-            className="text-2xl sm:text-3xl font-bold text-[#3d2212] text-center mb-10"
-            style={{ fontFamily: "'Noto Serif JP', serif" }}
-          >
-            プラン比較表
-          </h2>
-
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
+      <section className={`${styles.section} ${styles.sectionWhite}`}>
+        <div className={styles.innerNarrow}>
+          <h2 className={styles.sectionTitle}>プラン比較表</h2>
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
               <thead>
-                <tr className="border-b-2 border-[#e4d0b8]">
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-[#7d4a2d] w-1/3">
-                    機能
-                  </th>
-                  {PLANS.map((p) => (
-                    <th
-                      key={p.id}
-                      className={`text-center py-3 px-4 text-sm font-bold ${
-                        p.highlight ? 'text-[#7d4a2d] bg-[#faf6f1]' : 'text-[#3d2212]'
-                      }`}
-                    >
+                <tr>
+                  <th className={styles.thFeature}>機能</th>
+                  {PLANS.map((p, i) => (
+                    <th key={p.id} className={`${styles.thPlan} ${i === 2 ? styles.thPlanHighlight : ''}`}>
                       {p.name}
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {COMPARISON_ROWS.map(({ label, free, hobby, creator, pro }, i) => (
-                  <tr
-                    key={label}
-                    className={i % 2 === 0 ? 'bg-[#faf6f1]/50' : 'bg-white'}
-                  >
-                    <td className="py-3 px-4 text-sm text-[#5e3720] font-medium">{label}</td>
-                    {[free, hobby, creator, pro].map((val, j) => (
+                {COMPARISON_ROWS.map(({ label, values }, rowIdx) => (
+                  <tr key={label} className={rowIdx % 2 === 0 ? styles.trEven : styles.trOdd}>
+                    <td className={styles.tdFeature}>{label}</td>
+                    {values.map((val, colIdx) => (
                       <td
-                        key={j}
-                        className={`py-3 px-4 text-sm text-center ${
-                          val === '×' ? 'text-[#c4a882]' : 'text-[#3d2212] font-medium'
-                        } ${j === 2 ? 'bg-[#faf6f1]' : ''}`}
+                        key={colIdx}
+                        className={`${styles.tdValue} ${colIdx === 2 ? styles.tdValueHighlight : ''} ${val === '×' ? styles.tdValueMuted : ''}`}
                       >
                         {val}
                       </td>
@@ -274,53 +238,17 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-16 px-4 bg-[#faf6f1]">
-        <div className="max-w-3xl mx-auto">
-          <h2
-            className="text-2xl sm:text-3xl font-bold text-[#3d2212] text-center mb-10"
-            style={{ fontFamily: "'Noto Serif JP', serif" }}
-          >
-            よくある質問
-          </h2>
-
-          <div className="space-y-4">
-            {[
-              {
-                q: '無料プランからアップグレードできますか？',
-                a: 'はい、いつでもアップグレードできます。アップグレード後は即時に新しいプランの機能をご利用いただけます。',
-              },
-              {
-                q: 'いつでも解約できますか？',
-                a: 'はい、いつでも解約できます。解約後も当月末まで有料機能をご利用いただけます。',
-              },
-              {
-                q: '生成した型紙を商用利用できますか？',
-                a: 'Creatorプラン以上では商用利用が可能です。詳しくは利用規約をご確認ください。',
-              },
-              {
-                q: 'PDFの透かしとは何ですか？',
-                a: '無料プランでダウンロードしたPDFには「LeatherCraft AI Free」の透かしが薄く入ります。Hobbyプラン以上では透かしのないクリーンなPDFをダウンロードできます。',
-              },
-            ].map(({ q, a }) => (
-              <details
-                key={q}
-                className="bg-white border border-[#e4d0b8] rounded-xl px-6 py-4 group"
-              >
-                <summary className="font-semibold text-[#3d2212] cursor-pointer list-none flex items-center justify-between gap-2">
+      <section className={`${styles.section} ${styles.sectionCream}`}>
+        <div className={styles.innerXNarrow}>
+          <h2 className={styles.sectionTitle}>よくある質問</h2>
+          <div className={styles.faqList}>
+            {FAQ_ITEMS.map(({ q, a }) => (
+              <details key={q} className={styles.faqItem}>
+                <summary className={styles.faqSummary}>
                   {q}
-                  <svg
-                    className="w-4 h-4 text-[#b87348] shrink-0 transition-transform group-open:rotate-180"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  <ChevronIcon className={styles.faqChevron} />
                 </summary>
-                <p className="mt-3 text-[#7d4a2d] text-sm leading-relaxed">{a}</p>
+                <p className={styles.faqBody}>{a}</p>
               </details>
             ))}
           </div>
@@ -328,23 +256,36 @@ export default function PricingPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 px-4 bg-gradient-to-r from-[#7d4a2d] to-[#5e3720] text-center">
-        <h2
-          className="text-2xl sm:text-3xl font-bold text-white mb-4"
-          style={{ fontFamily: "'Noto Serif JP', serif" }}
-        >
-          まずは無料で試してみよう
-        </h2>
-        <p className="text-[#e4d0b8] mb-8">
-          クレジットカード不要・アカウント登録なしで始められます
-        </p>
-        <Link
-          to="/select"
-          className="inline-block px-8 py-4 bg-[#f2e9dc] hover:bg-white text-[#5e3720] font-bold text-lg rounded-xl transition-all"
-        >
-          無料で型紙を作る
-        </Link>
+      <section className={styles.ctaBanner}>
+        <h2 className={styles.ctaTitle}>まずは無料で試してみよう</h2>
+        <p className={styles.ctaBody}>クレジットカード不要・アカウント登録なしで始められます</p>
+        <Link to="/select" className={styles.ctaBtn}>無料で型紙を作る</Link>
       </section>
     </div>
+  )
+}
+
+function CheckIcon({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="2 8 6 12 14 4" />
+    </svg>
+  )
+}
+
+function XIcon({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      <line x1="4" y1="4" x2="12" y2="12" />
+      <line x1="12" y1="4" x2="4" y2="12" />
+    </svg>
+  )
+}
+
+function ChevronIcon({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="4 6 8 10 12 6" />
+    </svg>
   )
 }

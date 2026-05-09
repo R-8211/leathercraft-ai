@@ -1,0 +1,444 @@
+/* ========== Layout ========== */
+.page {
+  min-height: 100vh;
+  background: var(--color-earth-50);
+}
+
+.section {
+  padding: 4.5rem 1.5rem;
+}
+
+.sectionWhite { background: white; }
+.sectionCream { background: var(--color-earth-50); }
+
+.inner {
+  max-width: 1152px;
+  margin: 0 auto;
+}
+
+.innerNarrow {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.innerXNarrow {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ========== Page Header ========== */
+.pageHeader {
+  padding: 4.5rem 1.5rem 4rem;
+  background: linear-gradient(160deg, var(--color-earth-100) 0%, var(--color-earth-50) 100%);
+  text-align: center;
+  border-bottom: 1px solid var(--color-earth-200);
+}
+
+.pageTitle {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(1.875rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--color-earth-900);
+  margin-bottom: 1rem;
+}
+
+.pageSubtitle {
+  color: var(--color-earth-700);
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ========== Plan Cards ========== */
+.plansGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .plansGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .plansGrid {
+    grid-template-columns: repeat(4, 1fr);
+    align-items: start;
+  }
+}
+
+.planCard {
+  position: relative;
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-earth-200);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.planCard:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.planCardHighlight {
+  border-color: var(--color-earth-500);
+  box-shadow: 0 0 0 1px var(--color-earth-500), var(--shadow-md);
+}
+
+.planCardHighlight:hover {
+  box-shadow: 0 0 0 1px var(--color-earth-500), var(--shadow-lg);
+}
+
+.planBadge {
+  position: absolute;
+  top: 0.875rem;
+  right: 0.875rem;
+  padding: 0.2rem 0.625rem;
+  background: var(--color-earth-500);
+  color: white;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+
+/* Plan Header */
+.planHeader {
+  padding: 1.5rem 1.5rem 1.25rem;
+}
+
+.planHeaderDark {
+  background: var(--color-earth-900);
+}
+
+.planHeaderCream {
+  background: linear-gradient(135deg, var(--color-earth-100), var(--color-earth-50));
+}
+
+.planName {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--color-earth-900);
+  margin-bottom: 0.125rem;
+}
+
+.planNameLight {
+  color: white;
+}
+
+.planNameJa {
+  font-size: 0.75rem;
+  color: var(--color-earth-600);
+  margin-bottom: 1rem;
+}
+
+.planNameJaLight {
+  color: var(--color-earth-300);
+}
+
+.planPriceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: 0.625rem;
+}
+
+.planPrice {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-earth-900);
+}
+
+.planPriceLight {
+  color: white;
+}
+
+.planPriceUnit {
+  font-size: 0.8125rem;
+  color: var(--color-earth-600);
+  margin-bottom: 0.125rem;
+}
+
+.planPriceUnitLight {
+  color: var(--color-earth-300);
+}
+
+.planDesc {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--color-earth-700);
+}
+
+.planDescLight {
+  color: var(--color-earth-300);
+}
+
+/* Plan Features */
+.planFeatures {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.featureList {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.featureIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.featureAvailable {
+  color: var(--color-earth-900);
+}
+
+.featureUnavailable {
+  color: var(--color-earth-300);
+}
+
+.iconCheck { color: #16a34a; }
+.iconX { color: var(--color-earth-300); }
+
+/* CTA Buttons */
+.planCta {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.planCta:active { transform: scale(0.97); }
+
+.planCta:focus-visible {
+  outline: 2px solid var(--color-earth-500);
+  outline-offset: 2px;
+}
+
+.ctaOutline {
+  border: 1.5px solid var(--color-earth-500);
+  color: var(--color-earth-600);
+  background: transparent;
+}
+
+.ctaOutline:hover {
+  background: rgba(184, 115, 72, 0.06);
+}
+
+.ctaBrown {
+  background: var(--color-earth-500);
+  color: white;
+}
+
+.ctaBrown:hover { background: var(--color-earth-600); }
+
+.ctaDark {
+  background: var(--color-earth-700);
+  color: white;
+}
+
+.ctaDark:hover { background: var(--color-earth-800); }
+
+.ctaBlack {
+  background: var(--color-earth-900);
+  color: white;
+}
+
+.ctaBlack:hover { background: black; }
+
+/* ========== Comparison Table ========== */
+.sectionTitle {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: var(--color-earth-900);
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-earth-200);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table thead tr {
+  border-bottom: 2px solid var(--color-earth-200);
+}
+
+.thFeature {
+  text-align: left;
+  padding: 0.875rem 1.25rem;
+  font-weight: 600;
+  color: var(--color-earth-700);
+  width: 35%;
+  background: white;
+}
+
+.thPlan {
+  text-align: center;
+  padding: 0.875rem 1rem;
+  font-weight: 700;
+  color: var(--color-earth-900);
+  background: white;
+}
+
+.thPlanHighlight {
+  color: var(--color-earth-700);
+  background: var(--color-earth-50);
+}
+
+.tdFeature {
+  padding: 0.875rem 1.25rem;
+  font-size: 0.875rem;
+  color: var(--color-earth-800);
+  font-weight: 500;
+}
+
+.tdValue {
+  padding: 0.875rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-earth-900);
+}
+
+.tdValueHighlight {
+  background: var(--color-earth-50);
+}
+
+.tdValueMuted {
+  color: var(--color-earth-300);
+}
+
+.trEven { background: rgba(250, 246, 241, 0.6); }
+.trOdd { background: white; }
+
+/* ========== FAQ ========== */
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.faqItem {
+  background: white;
+  border: 1px solid var(--color-earth-200);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.faqItem:hover {
+  border-color: var(--color-earth-300);
+}
+
+.faqItem[open] {
+  border-color: var(--color-earth-300);
+}
+
+.faqSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.125rem 1.25rem;
+  font-weight: 600;
+  color: var(--color-earth-900);
+  font-size: 0.9375rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.faqSummary::-webkit-details-marker {
+  display: none;
+}
+
+.faqChevron {
+  width: 16px;
+  height: 16px;
+  color: var(--color-earth-500);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.faqItem[open] .faqChevron {
+  transform: rotate(180deg);
+}
+
+.faqBody {
+  padding: 0 1.25rem 1.125rem;
+  font-size: 0.875rem;
+  color: var(--color-earth-700);
+  line-height: 1.75;
+}
+
+/* ========== CTA ========== */
+.ctaBanner {
+  padding: 4.5rem 1.5rem;
+  background: linear-gradient(135deg, var(--color-earth-700), var(--color-earth-900));
+  text-align: center;
+}
+
+.ctaTitle {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(1.375rem, 2.5vw, 1.875rem);
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.875rem;
+}
+
+.ctaBody {
+  color: var(--color-earth-200);
+  font-size: 0.9375rem;
+  margin-bottom: 2rem;
+  line-height: 1.7;
+}
+
+.ctaBtn {
+  display: inline-block;
+  padding: 0.9375rem 2.25rem;
+  background: var(--color-earth-100);
+  color: var(--color-earth-800);
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.ctaBtn:hover { background: white; }
+.ctaBtn:active { transform: scale(0.97); }
