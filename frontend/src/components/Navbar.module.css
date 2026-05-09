@@ -1,0 +1,207 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: rgba(250, 246, 241, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-earth-200);
+}
+
+.nav {
+  max-width: 1152px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logoText {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--color-earth-800);
+  letter-spacing: -0.01em;
+}
+
+/* Desktop nav links */
+.desktopNav {
+  display: none;
+  align-items: center;
+  gap: 0.125rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .desktopNav {
+    display: flex;
+  }
+}
+
+.navLink {
+  display: block;
+  padding: 0.375rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-earth-700);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.navLink:hover {
+  color: var(--color-earth-900);
+  background-color: var(--color-earth-100);
+}
+
+.navLinkActive {
+  color: var(--color-earth-800);
+  font-weight: 600;
+  background-color: var(--color-earth-100);
+}
+
+/* Desktop actions */
+.desktopActions {
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .desktopActions {
+    display: flex;
+  }
+}
+
+.loginLink {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-earth-700);
+  text-decoration: none;
+  transition: color 0.15s ease;
+  padding: 0.375rem 0.5rem;
+}
+
+.loginLink:hover {
+  color: var(--color-earth-900);
+}
+
+.ctaBtn {
+  display: inline-block;
+  padding: 0.5rem 1.125rem;
+  background-color: var(--color-earth-500);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.ctaBtn:hover {
+  background-color: var(--color-earth-600);
+}
+
+.ctaBtn:active {
+  transform: scale(0.97);
+}
+
+.ctaBtn:focus-visible {
+  outline: 2px solid var(--color-earth-500);
+  outline-offset: 2px;
+}
+
+/* Hamburger */
+.menuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-earth-700);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.menuBtn:hover {
+  background-color: var(--color-earth-100);
+  color: var(--color-earth-900);
+}
+
+.menuBtn:focus-visible {
+  outline: 2px solid var(--color-earth-500);
+  outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+  .menuBtn {
+    display: none;
+  }
+}
+
+/* Mobile menu */
+.mobileMenu {
+  background-color: var(--color-earth-50);
+  border-top: 1px solid var(--color-earth-200);
+  padding: 0.75rem 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.mobileDivider {
+  height: 1px;
+  background-color: var(--color-earth-200);
+  border: none;
+  margin: 0.375rem 0;
+}
+
+.mobileNavLink {
+  display: block;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-earth-700);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.mobileNavLink:hover {
+  background-color: var(--color-earth-100);
+  color: var(--color-earth-900);
+}
+
+.mobileCtaBtn {
+  display: block;
+  text-align: center;
+  padding: 0.75rem;
+  background-color: var(--color-earth-500);
+  color: white;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  margin-top: 0.375rem;
+  transition: background-color 0.15s ease;
+}
+
+.mobileCtaBtn:hover {
+  background-color: var(--color-earth-600);
+}
