@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useParams, useLocation, Link } from 'react-router-dom'
 import PatternSvgPlaceholder from '../components/PatternSvgPlaceholder'
+import RequirementsCard from '../components/RequirementsCard'
 import styles from './ChatPage.module.css'
 
 // アイテム名の対応表（URLパラメータ → 表示名）
@@ -14,33 +15,52 @@ const ITEM_NAMES = {
   'key-case': 'キーケース',
 }
 
-// サジェスト例
-const SUGGEST_EXAMPLES = [
-  'カードが6枚入る薄めの財布を作りたい',
-  '小銭がたくさん入るBOX型コインケース',
-  '普段使いできるシンプルなキーケース',
+// サジェスト例（アイテム別）
+const SUGGEST_EXAMPLES_MAP = {
+  'bifold-wallet': [
+    'カードが6枚入る薄めの財布を作りたい',
+    '小銭入れ付きで少しマチのある二つ折りがほしい',
+    'シンプルでコンパクトな財布にしたい',
+  ],
+  'trifold-wallet': [
+    'カードをたくさん入れたい三つ折りを作りたい',
+    'コンパクトで使いやすい三つ折りがほしい',
+    '小銭入れ付きで使いやすいものを作りたい',
+  ],
+  'long-wallet': [
+    'カードが10枚以上入る長財布を作りたい',
+    'ラウンドファスナーで安心感のある長財布がほしい',
+    'シンプルなフラップタイプの長財布を作りたい',
+  ],
+  'card-case': [
+    'カードが6枚入るカードケースを作りたい',
+    '薄くてスリムなカードケースにしたい',
+    '角丸でやわらかい印象のカードケースがほしい',
+  ],
+  'coin-purse': [
+    'Lファスナーで開きやすい小銭入れを作りたい',
+    'スナップボタンのシンプルな小銭入れがほしい',
+    '少しマチをつけて収納力を上げたい',
+  ],
+  'coin-case': [
+    'BOX型でしっかり収納できるコインケースを作りたい',
+    'ラウンドファスナーで大きく開くコインケースがほしい',
+    'コンパクトで持ち歩きやすいコインケースにしたい',
+  ],
+  'key-case': [
+    'キーフックが4つ入るキーケースを作りたい',
+    'コンパクトで使いやすいキーケースがほしい',
+    'スナップボタンで開けやすいキーケースにしたい',
+  ],
+}
+
+const DEFAULT_SUGGESTS = [
+  'できるだけシンプルに作りたい',
+  '使いやすさを重視したデザインにしたい',
+  '標準的なサイズで作ってほしい',
 ]
 
-// スタブ AI 応答生成（ダミー）
-function generateStubResponse(userMessage, itemName) {
-  const lower = userMessage.toLowerCase()
-
-  if (lower.includes('カード') && lower.includes('枚')) {
-    return `わかりました！カードをたくさん収納できる${itemName}ですね。カードポケットの枚数を考慮して設計します。\n\n他に気になる点はありますか？例えば:\n- 小銭入れはつけますか？\n- 革の色や厚みのご希望は？\n- 大きさのイメージはありますか？`
-  }
-  if (lower.includes('薄') || lower.includes('コンパクト') || lower.includes('slim')) {
-    return `薄くてコンパクトな${itemName}をお作りします。スリムなデザインを実現するために、内部のパーツ構成を工夫しますね。\n\n具体的な厚みや縦横のサイズのイメージはありますか？`
-  }
-  if (lower.includes('box') || lower.includes('box型') || lower.includes('ボックス')) {
-    return `BOX型の${itemName}ですね！マチをしっかり取ることで収納力が上がります。\n\n開口部はファスナーにしますか？それともスナップボタンやマグネットのご希望はありますか？`
-  }
-  if (lower.includes('シンプル') || lower.includes('普段使い') || lower.includes('定番')) {
-    return `シンプルで使いやすい${itemName}ですね。飽きのこないデザインで長く使えるものを作りましょう。\n\n革の色や素材のイメージはありますか？（タンニン鞣し・クロム鞣しなど）`
-  }
-
-  // デフォルト応答
-  return `ありがとうございます！${itemName}の制作ですね。\n\nもう少し詳しく教えていただけますか？例えば:\n- どんな用途で使いますか？\n- 大きさのイメージはありますか？\n- 特にこだわりたい点はありますか？\n\nご要望をもとに最適な型紙を生成します。`
-}
+const API_BASE = 'http://localhost:3001'
 
 export default function ChatPage() {
   const { itemId } = useParams()
@@ -53,15 +73,29 @@ export default function ChatPage() {
       role: 'assistant',
       text: `こんにちは！${itemName}の型紙を作成します。\nどんな仕様にしたいか、自然な言葉で教えてください。\n\n例:「カードが6枚入って、小銭入れもほしい」「できるだけスリムにしたい」など、思いつくことをそのままお伝えください。`,
       timestamp: new Date(),
+      requirements: null,
     },
   ])
   const [inputText, setInputText] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('chat') // スマホ用タブ: 'chat' | 'preview'
+  const [apiError, setApiError] = useState(null) // API接続エラー
+  const [finalRequirements, setFinalRequirements] = useState(null) // 生成確定した要件
 
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
-  const messagesContainerRef = useRef(null)
+
+  const suggests = SUGGEST_EXAMPLES_MAP[itemId] ?? DEFAULT_SUGGESTS
+
+  // チャット履歴を Claude API 用フォーマットに変換（requirements カードを除く通常メッセージのみ）
+  const buildHistory = useCallback((msgs) => {
+    return msgs
+      .filter((m) => m.id !== 'initial' && !m.isRequirementsCard)
+      .map((m) => ({
+        role: m.role,
+        content: m.text,
+      }))
+  }, [])
 
   // メッセージが追加されたら最下部へスクロール
   useEffect(() => {
@@ -72,38 +106,88 @@ export default function ChatPage() {
     const text = inputText.trim()
     if (!text || isLoading) return
 
+    setApiError(null)
+
     const userMessage = {
       id: `user-${Date.now()}`,
       role: 'user',
       text,
       timestamp: new Date(),
+      requirements: null,
     }
 
     setMessages((prev) => [...prev, userMessage])
     setInputText('')
     setIsLoading(true)
 
-    // スタブ応答を 1〜2 秒後に返す
-    const delay = 800 + Math.random() * 800
-    await new Promise((resolve) => setTimeout(resolve, delay))
+    try {
+      // バックエンド API 呼び出し
+      const history = buildHistory([...messages, userMessage])
 
-    const assistantMessage = {
-      id: `assistant-${Date.now()}`,
-      role: 'assistant',
-      text: generateStubResponse(text, itemName),
-      timestamp: new Date(),
+      const response = await fetch(`${API_BASE}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId, history }),
+      })
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}))
+        throw new Error(errData.error ?? `HTTP ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      const assistantMessage = {
+        id: `assistant-${Date.now()}`,
+        role: 'assistant',
+        text: data.text,
+        timestamp: new Date(),
+        requirements: null,
+      }
+
+      setMessages((prev) => [...prev, assistantMessage])
+
+      // 要件が揃った場合はカードメッセージを追加
+      if (data.requirements) {
+        const cardMessage = {
+          id: `requirements-${Date.now()}`,
+          role: 'assistant',
+          text: '',
+          timestamp: new Date(),
+          requirements: data.requirements,
+          isRequirementsCard: true,
+        }
+        setMessages((prev) => [...prev, cardMessage])
+      }
+    } catch (err) {
+      console.error('[ChatPage] API error:', err)
+      const errMsg = err.message?.includes('fetch')
+        ? 'サーバーに接続できませんでした。バックエンドが起動しているか確認してください。'
+        : err.message ?? 'エラーが発生しました。'
+      setApiError(errMsg)
+
+      // エラーメッセージを吹き出しとして表示
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `error-${Date.now()}`,
+          role: 'assistant',
+          text: `申し訳ありません。エラーが発生しました。\n${errMsg}`,
+          timestamp: new Date(),
+          requirements: null,
+          isError: true,
+        },
+      ])
+    } finally {
+      setIsLoading(false)
     }
-
-    setMessages((prev) => [...prev, assistantMessage])
-    setIsLoading(false)
-  }, [inputText, isLoading, itemName])
+  }, [inputText, isLoading, messages, itemId, buildHistory])
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       sendMessage()
     }
-    // Shift+Enter は通常の改行（デフォルト動作）
   }
 
   const handleSuggestClick = (text) => {
@@ -111,16 +195,40 @@ export default function ChatPage() {
     inputRef.current?.focus()
   }
 
+  const handleGenerate = useCallback((finalValues) => {
+    // 最終確定した要件を設定し、生成フローへ（Sprint 4 で本実装）
+    setFinalRequirements(finalValues)
+
+    // 確定メッセージを追加
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `user-confirm-${Date.now()}`,
+        role: 'user',
+        text: 'この内容で型紙を生成してください。',
+        timestamp: new Date(),
+        requirements: null,
+      },
+      {
+        id: `assistant-confirm-${Date.now()}`,
+        role: 'assistant',
+        text: '要件を確定しました。型紙を生成します...\n\n（型紙生成エンジンは Sprint 4 で実装予定です）',
+        timestamp: new Date(),
+        requirements: null,
+      },
+    ])
+  }, [])
+
   const formatTime = (date) => {
     return date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
   }
 
   const formatMessageText = (text) => {
-    // 改行を <br> に変換
-    return text.split('\n').map((line, i) => (
+    const lines = text.split('\n')
+    return lines.map((line, i) => (
       <span key={i}>
         {line}
-        {i < text.split('\n').length - 1 && <br />}
+        {i < lines.length - 1 && <br />}
       </span>
     ))
   }
@@ -159,6 +267,21 @@ export default function ChatPage() {
         </div>
       </div>
 
+      {/* API エラーバナー */}
+      {apiError && (
+        <div className={styles.errorBanner} role="alert">
+          <WarningIcon />
+          <span>{apiError}</span>
+          <button
+            className={styles.errorDismiss}
+            onClick={() => setApiError(null)}
+            aria-label="エラーを閉じる"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {/* メインコンテンツ */}
       <div className={styles.body}>
         {/* 左ペイン: チャット */}
@@ -168,29 +291,53 @@ export default function ChatPage() {
           aria-label="チャット"
         >
           {/* メッセージ一覧 */}
-          <div className={styles.messages} ref={messagesContainerRef} aria-live="polite" aria-label="チャット履歴">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`${styles.messageRow} ${msg.role === 'user' ? styles.messageRowUser : styles.messageRowAssistant}`}
-              >
-                {msg.role === 'assistant' && (
-                  <div className={styles.avatar} aria-hidden="true">
-                    <AiIcon />
+          <div className={styles.messages} aria-live="polite" aria-label="チャット履歴">
+            {messages.map((msg) => {
+              // 要件確認カードメッセージ
+              if (msg.isRequirementsCard && msg.requirements) {
+                return (
+                  <div key={msg.id} className={`${styles.messageRow} ${styles.messageRowAssistant}`}>
+                    <div className={styles.avatar} aria-hidden="true">
+                      <AiIcon />
+                    </div>
+                    <div className={`${styles.bubbleWrap} ${styles.bubbleWrapWide}`}>
+                      <RequirementsCard
+                        requirements={msg.requirements}
+                        onGenerate={handleGenerate}
+                      />
+                      <span className={styles.timestamp}>{formatTime(msg.timestamp)}</span>
+                    </div>
                   </div>
-                )}
-                <div className={styles.bubbleWrap}>
-                  <div
-                    className={`${styles.bubble} ${msg.role === 'user' ? styles.bubbleUser : styles.bubbleAssistant}`}
-                  >
-                    {formatMessageText(msg.text)}
+                )
+              }
+
+              return (
+                <div
+                  key={msg.id}
+                  className={`${styles.messageRow} ${msg.role === 'user' ? styles.messageRowUser : styles.messageRowAssistant}`}
+                >
+                  {msg.role === 'assistant' && (
+                    <div className={styles.avatar} aria-hidden="true">
+                      <AiIcon />
+                    </div>
+                  )}
+                  <div className={styles.bubbleWrap}>
+                    <div
+                      className={[
+                        styles.bubble,
+                        msg.role === 'user' ? styles.bubbleUser : styles.bubbleAssistant,
+                        msg.isError ? styles.bubbleError : '',
+                      ].join(' ')}
+                    >
+                      {formatMessageText(msg.text)}
+                    </div>
+                    <span className={`${styles.timestamp} ${msg.role === 'user' ? styles.timestampRight : ''}`}>
+                      {formatTime(msg.timestamp)}
+                    </span>
                   </div>
-                  <span className={`${styles.timestamp} ${msg.role === 'user' ? styles.timestampRight : ''}`}>
-                    {formatTime(msg.timestamp)}
-                  </span>
                 </div>
-              </div>
-            ))}
+              )
+            })}
 
             {/* ローディング表示 */}
             {isLoading && (
@@ -216,7 +363,7 @@ export default function ChatPage() {
             <div className={styles.suggests} aria-label="入力例">
               <p className={styles.suggestsLabel}>入力例</p>
               <div className={styles.suggestsList}>
-                {SUGGEST_EXAMPLES.map((example) => (
+                {suggests.map((example) => (
                   <button
                     key={example}
                     className={styles.suggestBtn}
@@ -267,21 +414,39 @@ export default function ChatPage() {
         >
           <div className={styles.previewHeader}>
             <h2 className={styles.previewTitle}>型紙プレビュー</h2>
+            {finalRequirements && (
+              <span className={styles.previewStatus}>要件確定済み</span>
+            )}
           </div>
           <div className={styles.previewBody}>
             <div className={styles.previewPlaceholder}>
               <PatternSvgPlaceholder />
-              <div className={styles.previewOverlay} aria-hidden="true">
-                <div className={styles.previewOverlayContent}>
-                  <PatternIcon />
-                  <p className={styles.previewOverlayTitle}>型紙はここに表示されます</p>
-                  <p className={styles.previewOverlayText}>
-                    チャットで要望をお伝えいただくと、
-                    <br />
-                    AI が型紙を生成してここに表示します。
-                  </p>
+              {!finalRequirements && (
+                <div className={styles.previewOverlay} aria-hidden="true">
+                  <div className={styles.previewOverlayContent}>
+                    <PatternDisplayIcon />
+                    <p className={styles.previewOverlayTitle}>型紙はここに表示されます</p>
+                    <p className={styles.previewOverlayText}>
+                      チャットで要望をお伝えいただくと、
+                      <br />
+                      AI が型紙を生成してここに表示します。
+                    </p>
+                  </div>
                 </div>
-              </div>
+              )}
+              {finalRequirements && (
+                <div className={styles.previewOverlay} aria-hidden="true">
+                  <div className={styles.previewOverlayContent}>
+                    <GeneratingIcon />
+                    <p className={styles.previewOverlayTitle}>Sprint 4 で実装予定</p>
+                    <p className={styles.previewOverlayText}>
+                      要件が確定しました。
+                      <br />
+                      SVG 型紙生成は Sprint 4 で実装されます。
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -326,11 +491,20 @@ function SuggestIcon() {
   )
 }
 
-function PatternIcon() {
+function PatternDisplayIcon() {
   return (
     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <path d="M3 9h18M3 15h18M9 3v18M15 3v18" strokeDasharray="2 2" />
+    </svg>
+  )
+}
+
+function GeneratingIcon() {
+  return (
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
     </svg>
   )
 }
@@ -349,6 +523,16 @@ function PreviewTabIcon() {
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <path d="M3 9h18" />
       <path d="M9 21V9" />
+    </svg>
+  )
+}
+
+function WarningIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
     </svg>
   )
 }

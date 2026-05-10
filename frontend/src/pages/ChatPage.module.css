@@ -496,6 +496,67 @@
   line-height: 1.6;
 }
 
+/* ========== エラーバナー ========== */
+.errorBanner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: #fff3f0;
+  border-bottom: 1px solid #f5b8aa;
+  font-size: 0.8125rem;
+  color: #8a2400;
+  flex-shrink: 0;
+}
+
+.errorBanner svg {
+  flex-shrink: 0;
+  color: #d04000;
+}
+
+.errorDismiss {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.125rem;
+  color: #8a2400;
+  padding: 0 0.25rem;
+  line-height: 1;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+.errorDismiss:focus-visible {
+  outline: 2px solid #d04000;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ========== エラー吹き出し ========== */
+.bubbleError {
+  background: #fff3f0 !important;
+  color: #8a2400 !important;
+  border: 1px solid #f5b8aa;
+}
+
+/* ========== 要件確認カード用の幅広バブル ========== */
+.bubbleWrapWide {
+  max-width: min(95%, 480px);
+}
+
+/* ========== プレビューヘッダー ステータス ========== */
+.previewStatus {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: white;
+  background: var(--color-earth-600);
+  border-radius: 4px;
+  padding: 0.125rem 0.5rem;
+  margin-left: 0.75rem;
+  vertical-align: middle;
+}
+
 /* ========== スマホ向け表示切り替え ========== */
 .hiddenOnMobile {
   display: none;

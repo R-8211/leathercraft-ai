@@ -238,3 +238,100 @@ npm run dev
 ESLint: 0 errors, 0 warnings（ChatPage.jsx・SelectPage.jsx）
 vite build: ✓ built in 270ms（ビルドエラーなし）
 ```
+
+---
+
+## Sprint 3: AI 対話と要件抽出
+
+**ステータス:** 実装完了 - 評価待ち
+**実装日:** 2026-05-10
+
+### 実装内容
+
+**バックエンド（`backend/src/`）:**
+- `index.js`: Express サーバー（CORS 設定、ルーティング、エラーハンドラ）
+- `claudeService.js`: Claude API（`claude-haiku-4-5-20251001`）との通信、システムプロンプト生成、`<requirements>` タグのパース
+- `itemSchemas.js`: 7 アイテム全ての要件スキーマ定義・デフォルト値補完（`buildRequirements`）・バリデーション（`validateRequirements`）
+- `routes/chat.js`:
+  - `POST /api/chat`: チャット API（Claude 呼び出し + 要件確定判定）
+  - `POST /api/chat/finalize`: 手動編集値のバリデーション・デフォルト補完
+  - `GET /api/health`: ヘルスチェック
+
+**フロントエンド（`frontend/src/`）:**
+- `components/RequirementsCard.jsx`: 要件確認カードコンポーネント（数値入力・boolean トグル・select）、インライン編集、バリデーション警告、「この内容で生成」ボタン
+- `components/RequirementsCard.module.css`: 要件カードのスタイル（エラー色、自動補完バッジ、トグルアニメーション）
+- `pages/ChatPage.jsx`: スタブ削除、実 API 呼び出し実装、要件カードメッセージの差し込み、エラーバナー、アイテム別サジェスト例
+- `pages/ChatPage.module.css`: エラーバナー、エラー吹き出し、幅広バブル（要件カード用）、プレビューステータスバッジを追加
+
+**設定:**
+- `backend/.env.example`: 設定方法コメントを追記
+
+### 自己評価
+
+| 基準 | スコア (1-5) | コメント |
+|------|-------------|---------|
+| 機能完全性 | 4 | 受け入れ基準（カード6枚→確認カード表示・追質問・編集→生成ボタン）を概ね満たす。Claude がごくまれに `<requirements>` タグを出力しない場合があるが、会話を続けることで確定できる |
+| コード品質 | 4 | バックエンド/フロントエンドの責務が明確に分離。スキーマ定義を単一ファイルに集約してメンテナンス性を確保 |
+| UI/UX | 4 | 要件カードがチャット内にインライン表示される直感的な UX。自動補完バッジで補完値を可視化。エラーバナーで接続エラーを通知 |
+| エラーハンドリング | 4 | API エラー（401/429/fetch 失敗）を適切に分類・表示。バリデーション警告をリアルタイムで更新 |
+| 既存機能との統合 | 5 | Sprint 1・2 の全ページが引き続き正常動作。ビルドエラー・ESLint エラーなし |
+
+### 技術的な判断
+
+- **`<requirements>` タグによる構造化出力**: Claude の出力に JSON を埋め込む方式を採用。Function Calling も検討したが、Haiku モデルでの安定性と実装シンプルさを優先してタグ方式を選択
+- **アイテム別システムプロンプト**: スキーマ定義から動的にパラメータリストを生成し、モデルへのコンテキストを最小化（トークン節約）
+- **チャット履歴のフィルタリング**: 要件確認カードメッセージ（`isRequirementsCard: true`）は API 送信履歴から除外し、Claude のコンテキストを汚染しないよう設計
+- **`formatMessageText` の二重 split 解消**: Sprint 2 フィードバック（`perf-split-twice`）に対応。`const lines = text.split('\n')` で一度だけ分割
+- **アイテム別サジェスト例**: 7 アイテムそれぞれに最適化したサジェスト例を定義（Sprint 2 は共通3例だった）
+
+### 既知の課題
+
+- Claude がすべてのパラメータを明示された場合でも、まれに追質問を続けることがある（プロンプトの改善余地あり）
+- `hasCoinPocket` の true/false の解釈が会話の文脈に依存するため、稀に逆になることがある（確認カードで編集可能なので機能的問題はなし）
+- バックエンドの認証機構は未実装（Sprint 8 で対応予定）
+- `POST /api/chat` は現状レート制限なし（Sprint 8 で対応予定）
+
+### Evaluator への引き渡し事項
+
+**起動方法:**
+```bash
+# バックエンド（ターミナル1）
+cd C:\Users\良一\Projects\leathercraft-ai\backend
+# .env ファイルに ANTHROPIC_API_KEY を設定（.env.example を参照）
+npm run dev
+# → http://localhost:3001 で起動
+
+# フロントエンド（ターミナル2）
+cd C:\Users\良一\Projects\leathercraft-ai\frontend
+npm run dev
+# → http://localhost:5173 で起動
+```
+
+**環境設定:**
+`backend/.env` に以下を設定してください（`backend/.env.example` 参照）:
+```
+ANTHROPIC_API_KEY=sk-ant-xxxxxxxx...
+PORT=3001
+```
+
+**テスト対象 URL:**
+- アイテム選択: http://localhost:5173/select
+- チャット（二つ折り財布）: http://localhost:5173/chat/bifold-wallet
+- チャット（小銭入れ）: http://localhost:5173/chat/coin-purse
+- API ヘルスチェック: http://localhost:3001/api/health
+
+**テストシナリオ:**
+
+1. **基本対話フロー（受け入れ基準①）**: `/chat/bifold-wallet` にアクセスし、「カードが 6 枚入る二つ折り財布」と入力。数ターンの会話後、要件確認カードがチャット内に表示されることを確認。カード上に「幅」「高さ」「カードポケット数 6」などが表示されることを確認
+
+2. **追質問（受け入れ基準②）**: 「財布が欲しい」のような曖昧な入力をする。AI が「縦のサイズはどのくらいにしますか？」などの追質問を返すことを確認
+
+3. **確認カード編集（受け入れ基準③）**: 要件確認カードが表示されたら「値を編集」ボタンをクリック。数値入力フィールドを変更し、「この内容で生成」ボタンが押せることを確認
+
+4. **自動補完バッジ**: 一部のパラメータのみ指定して要件を確定させ、未指定項目に「推奨値」バッジが表示されることを確認
+
+5. **寸法バリデーション**: 確認カードで「幅」を「5」に変更し、「5mm より小さい値です」という警告が表示されることを確認
+
+6. **エラーハンドリング**: バックエンドを停止した状態でメッセージを送信し、エラーバナーと エラー吹き出しが表示されることを確認
+
+7. **回帰テスト**: ランディングページ (`/`)・料金ページ (`/pricing`)・アイテム選択 (`/select`) が正常に表示されることを確認
