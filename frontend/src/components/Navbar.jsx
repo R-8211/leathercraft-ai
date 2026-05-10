@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import styles from './Navbar.module.css'
 
@@ -10,6 +10,8 @@ const NAV_ITEMS = [
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef(null)
+  const menuBtnRef = useRef(null)
 
   const handleHashLink = (e, to) => {
     if (to.startsWith('/#')) {
@@ -23,9 +25,39 @@ export default function Navbar() {
     }
   }
 
+  // メニュー外クリックで閉じる
+  useEffect(() => {
+    if (!menuOpen) return
+    const handleClickOutside = (e) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        menuBtnRef.current &&
+        !menuBtnRef.current.contains(e.target)
+      ) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [menuOpen])
+
+  // Escキーで閉じる
+  useEffect(() => {
+    if (!menuOpen) return
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+        menuBtnRef.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [menuOpen])
+
   return (
     <header className={styles.header}>
-      <nav className={styles.nav}>
+      <nav className={styles.nav} aria-label="グローバルナビゲーション">
         <Link to="/" className={styles.logo}>
           <LeatherIcon />
           <span className={styles.logoText}>LeatherCraft AI</span>
@@ -59,8 +91,10 @@ export default function Navbar() {
         </div>
 
         <button
+          ref={menuBtnRef}
           aria-label={menuOpen ? 'メニューを閉じる' : 'メニューを開く'}
           aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
           className={styles.menuBtn}
           onClick={() => setMenuOpen((prev) => !prev)}
         >
@@ -78,35 +112,49 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {menuOpen && (
-        <div className={styles.mobileMenu}>
-          {NAV_ITEMS.map(({ label, to }) => (
-            <div key={to}>
-              {to.startsWith('/#') ? (
-                <a href={to} onClick={(e) => handleHashLink(e, to)} className={styles.mobileNavLink}>
-                  {label}
-                </a>
-              ) : (
-                <NavLink
-                  to={to}
-                  end
-                  onClick={() => setMenuOpen(false)}
-                  className={styles.mobileNavLink}
-                >
-                  {label}
-                </NavLink>
-              )}
-            </div>
-          ))}
-          <hr className={styles.mobileDivider} />
-          <Link to="/login" onClick={() => setMenuOpen(false)} className={styles.mobileNavLink}>
-            ログイン
-          </Link>
-          <Link to="/select" onClick={() => setMenuOpen(false)} className={styles.mobileCtaBtn}>
-            無料で始める
-          </Link>
-        </div>
-      )}
+      <div
+        id="mobile-menu"
+        ref={menuRef}
+        className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ''}`}
+        aria-hidden={!menuOpen}
+      >
+        {NAV_ITEMS.map(({ label, to }) => (
+          <div key={to}>
+            {to.startsWith('/#') ? (
+              <a href={to} onClick={(e) => handleHashLink(e, to)} className={styles.mobileNavLink}>
+                {label}
+              </a>
+            ) : (
+              <NavLink
+                to={to}
+                end
+                tabIndex={menuOpen ? 0 : -1}
+                onClick={() => setMenuOpen(false)}
+                className={styles.mobileNavLink}
+              >
+                {label}
+              </NavLink>
+            )}
+          </div>
+        ))}
+        <hr className={styles.mobileDivider} />
+        <Link
+          to="/login"
+          tabIndex={menuOpen ? 0 : -1}
+          onClick={() => setMenuOpen(false)}
+          className={styles.mobileNavLink}
+        >
+          ログイン
+        </Link>
+        <Link
+          to="/select"
+          tabIndex={menuOpen ? 0 : -1}
+          onClick={() => setMenuOpen(false)}
+          className={styles.mobileCtaBtn}
+        >
+          無料で始める
+        </Link>
+      </div>
     </header>
   )
 }
