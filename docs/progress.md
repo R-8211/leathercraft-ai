@@ -79,6 +79,44 @@ npm run dev
 
 ---
 
+### スキルレビュー結果（2026-05-10）
+
+**レビュースキル:** ui-ux-pro-max（UI/UX品質基準による実装レビュー）
+
+#### 特定した問題と対応
+
+| 問題 | 優先度 | 対応 |
+|------|--------|------|
+| モバイルメニューが即開閉（アニメーションなし） | 高 | `max-height` トランジション（0.25s ease）で滑らかな開閉を実装 |
+| メニュー外クリックで閉じない | 高 | `useRef` + `mousedown` イベントリスナーで外クリック閉鎖を実装 |
+| Escキーでメニューが閉じない | 高 | `keydown` イベントで Escape 検知・閉鎖・フォーカス復帰を実装 |
+| `loginLink` に `focus-visible` スタイルなし | 中 | `outline: 2px solid var(--color-earth-500)` を追加 |
+| `mobileNavLink` / `mobileCtaBtn` に `focus-visible` なし | 中 | 各要素に `focus-visible` スタイルを追加 |
+| `footerLink` に `focus-visible` なし | 中 | `outline: 2px solid var(--color-earth-400)` を追加 |
+| タッチデバイスでホバーが固定される | 中 | `@media (hover: hover)` で囲み、タッチ端末のtransformホバーを無効化（LandingPage / PricingPage 全カード） |
+| `btnOutline` / `btnPrimaryWithIcon` に `focus-visible` なし | 低 | 各ボタンに `focus-visible` スタイルを追加 |
+| `PatternSvgPlaceholder` に `width`/`height` 属性なし | 低 | `width="280" height="200"` と `role="img"` を追加（レイアウトシフト防止） |
+| モバイルメニューのタブフォーカス管理 | 低 | `aria-hidden` + `tabIndex={menuOpen ? 0 : -1}` でメニュー閉鎖時のフォーカス流出を防止 |
+| `nav` に `aria-label` なし | 低 | `aria-label="グローバルナビゲーション"` を追加 |
+| `faqSummary` に `focus-visible` なし | 低 | `outline-offset: -2px` で内側アウトラインを追加 |
+
+#### 変更なし（問題なし）と判断した項目
+
+- デザイントークン（アースカラー、フォント、shadow変数）: 統一されており一貫性あり
+- ヒーローのビジュアルヒエラルキー: h1 → 説明文 → CTAの視線誘導が明確
+- PricingPageの比較表: `overflow-x: auto` で横スクロール対応済み
+- PricingPageのFAQ: `[open]` セレクタによるchevron回転アニメーション実装済み
+- レスポンシブブレークポイント: 375px・640px・768px・1024px が適切に設定されている
+- ボタンの `active` トランスフォーム（`scale(0.97)`）: 適切なクリックフィードバック
+
+#### ビルド確認
+
+```
+✓ built in 316ms（ビルドエラーなし）
+```
+
+---
+
 ## Sprint 2: アイテム選択とチャット UI 骨格
 
 **ステータス:** 実装完了 - 評価待ち

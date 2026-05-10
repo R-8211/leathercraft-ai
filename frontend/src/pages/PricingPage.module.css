@@ -93,8 +93,10 @@
   box-shadow: 0 0 0 1px var(--color-earth-500), var(--shadow-md);
 }
 
-.planCardHighlight:hover {
-  box-shadow: 0 0 0 1px var(--color-earth-500), var(--shadow-lg);
+@media (hover: hover) {
+  .planCardHighlight:hover {
+    box-shadow: 0 0 0 1px var(--color-earth-500), var(--shadow-lg);
+  }
 }
 
 .planBadge {
@@ -387,6 +389,12 @@
   cursor: pointer;
   list-style: none;
   user-select: none;
+  border-radius: inherit;
+}
+
+.faqSummary:focus-visible {
+  outline: 2px solid var(--color-earth-500);
+  outline-offset: -2px;
 }
 
 .faqSummary::-webkit-details-marker {

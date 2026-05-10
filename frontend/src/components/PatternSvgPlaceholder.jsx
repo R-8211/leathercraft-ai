@@ -4,9 +4,12 @@ export default function PatternSvgPlaceholder({ label = '二つ折り財布', cl
   return (
     <svg
       viewBox="0 0 280 200"
+      width="280"
+      height="200"
       xmlns="http://www.w3.org/2000/svg"
       className={`${styles.svg} ${className}`}
       aria-label={`${label}の型紙サンプル`}
+      role="img"
     >
       <rect width="280" height="200" fill="#faf6f1" rx="4" />
 

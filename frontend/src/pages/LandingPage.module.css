@@ -78,6 +78,11 @@
   border-color: var(--color-earth-500);
 }
 
+.btnOutline:focus-visible {
+  outline: 2px solid var(--color-earth-500);
+  outline-offset: 3px;
+}
+
 .btnPrimaryWithIcon {
   display: inline-flex;
   align-items: center;
@@ -100,6 +105,11 @@
 
 .btnPrimaryWithIcon:active {
   transform: scale(0.97);
+}
+
+.btnPrimaryWithIcon:focus-visible {
+  outline: 2px solid var(--color-earth-500);
+  outline-offset: 3px;
 }
 
 /* ========== Hero ========== */
@@ -397,6 +407,11 @@
   text-align: center;
   text-decoration: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.itemCard:focus-visible {
+  outline: 2px solid var(--color-earth-500);
+  outline-offset: 2px;
 }
 
 @media (hover: hover) {
