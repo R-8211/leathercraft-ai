@@ -5,8 +5,12 @@
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\""
   },
-  "workspaces": ["frontend", "backend"],
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "concurrently": "^9.0.0"
   }
 }

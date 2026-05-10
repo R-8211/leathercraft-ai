@@ -87,10 +87,17 @@
   width: 100%;
 }
 
-.itemCard:hover {
-  border-color: var(--color-earth-400);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .itemCard:hover {
+    border-color: var(--color-earth-400);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .itemCard:hover .itemIconWrap {
+    background: rgba(184, 115, 72, 0.15);
+    color: var(--color-earth-700);
+  }
 }
 
 .itemCard:focus-visible {
@@ -114,11 +121,6 @@
   justify-content: center;
   color: var(--color-earth-600);
   transition: background 0.18s ease, color 0.18s ease;
-}
-
-.itemCard:hover .itemIconWrap {
-  background: rgba(184, 115, 72, 0.15);
-  color: var(--color-earth-700);
 }
 
 .itemIconWrap svg {

@@ -255,7 +255,7 @@ export default function ChatPage() {
                 <SendIcon />
               </button>
             </div>
-            <p className={styles.inputHint}>Enter で送信　Shift + Enter で改行</p>
+            <p className={styles.inputHint}>Enter で送信 / Shift + Enter で改行</p>
           </div>
         </div>
 

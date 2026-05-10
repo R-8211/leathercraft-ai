@@ -35,9 +35,11 @@
   flex-shrink: 0;
 }
 
-.backButton:hover {
-  background: var(--color-earth-100);
-  color: var(--color-earth-900);
+@media (hover: hover) {
+  .backButton:hover {
+    background: var(--color-earth-100);
+    color: var(--color-earth-900);
+  }
 }
 
 .backButton:focus-visible {
@@ -99,8 +101,15 @@
   white-space: nowrap;
 }
 
-.tabBtn:hover {
-  color: var(--color-earth-800);
+@media (hover: hover) {
+  .tabBtn:hover {
+    color: var(--color-earth-800);
+  }
+}
+
+.tabBtn:focus-visible {
+  outline: 2px solid var(--color-earth-500);
+  outline-offset: -2px;
 }
 
 .tabBtnActive {
@@ -293,10 +302,12 @@
   width: 100%;
 }
 
-.suggestBtn:hover {
-  background: var(--color-earth-100);
-  border-color: var(--color-earth-300);
-  color: var(--color-earth-900);
+@media (hover: hover) {
+  .suggestBtn:hover {
+    background: var(--color-earth-100);
+    border-color: var(--color-earth-300);
+    color: var(--color-earth-900);
+  }
 }
 
 .suggestBtn:focus-visible {
@@ -373,8 +384,10 @@
   flex-shrink: 0;
 }
 
-.sendButton:hover:not(:disabled) {
-  background: var(--color-earth-700);
+@media (hover: hover) {
+  .sendButton:hover:not(:disabled) {
+    background: var(--color-earth-700);
+  }
 }
 
 .sendButton:active:not(:disabled) {
